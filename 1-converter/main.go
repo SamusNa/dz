@@ -3,39 +3,26 @@ package main
 import "fmt"
 
 var baseCurrency string
-const usdToEUR = 0.8553
-const usdToRUB = 80.43
-const eurToRUB = usdToRUB/usdToEUR
+var rates = map[string]float64{    // Все курсы - относительно USD
+	"USD": 1.0,
+	"EUR": 0.8553,
+	"RUB": 80.43,
+}
+var currencies = []string{"USD", "EUR", "RUB"}
 
 func main() {
 	baseCurrency = getUserInputBase()
 	sum := getUserInputSum()
 	toCurrency := getUserInputToCurrency()
-	result, currency := converter(baseCurrency, sum, toCurrency)
-	fmt.Printf("%.2f %v\n", result, currency)
+	result := converter(baseCurrency, sum, toCurrency)
+	fmt.Printf("%.2f %v\n", result, toCurrency)
 }
 
-func converter(baseCurrency string, sum float64, toCurrency string) (float64, string) {
-	switch baseCurrency {
-	case "USD":
-		if toCurrency == "EUR" {
-			return sum * usdToEUR, "EUR"
-		} else {
-			return sum * usdToRUB, "RUB"
-		}
-	case "EUR":
-		if toCurrency == "USD" {
-			return sum / usdToEUR, "USD"
-		} else {
-			return sum * eurToRUB, "RUB"
-		}
-	default:
-		if toCurrency == "USD" {
-			return sum / usdToRUB, "USD"
-		} else {
-			return sum / eurToRUB, "EUR"
-		}
-	}
+func converter(baseCurrency string, sum float64, toCurrency string) float64 {
+	inUSD := sum / rates[baseCurrency]
+	return inUSD * rates[toCurrency]
+	
+	
 }
 
 func getUserInputBase() string {
