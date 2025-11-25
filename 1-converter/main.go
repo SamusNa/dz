@@ -19,10 +19,9 @@ func main() {
 }
 
 func converter(baseCurrency string, sum float64, toCurrency string) float64 {
-	inUSD := sum / rates[baseCurrency]
-	return inUSD * rates[toCurrency]
-	
-	
+	p := &rates
+	inUSD := sum / (*p)[baseCurrency]
+	return inUSD * (*p)[toCurrency]
 }
 
 func getUserInputBase() string {
